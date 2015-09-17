@@ -1,4 +1,4 @@
-from tinydb import Table
+from tinydb.database import Table
 
 
 class SmartCacheTable(Table):
