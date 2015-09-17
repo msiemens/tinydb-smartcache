@@ -14,6 +14,7 @@ Usage
 .. code-block:: python
 
     >>> from tinydb import TinyDB
+    >>> from tinydb_smartcache import SmartCacheTable
     >>> db = TinyDB('db.json')
     >>> db.table_class = SmartCacheTable
     >>> db.table('foo')
@@ -24,15 +25,15 @@ If you want to enable TinyDB for all databases in a session, run:
 .. code-block:: python
 
     >>> from tinydb import TinyDB
+    >>> from tinydb_smartcache import SmartCacheTable
     >>> TinyDB.table_class = SmartCacheTable
     >>> # All databases/tables will now use the smart query cache
 
 Changelog
 *********
 
-
 **v1.0.0** (2015-09-17)
-=======================
+-----------------------
 
 - Initial release on PyPI
 
