@@ -9,10 +9,11 @@ python:
   - "2.7"
   - "2.6"
 install:
+  - pip install -U pytest
   - pip install coveralls
   - pip install pytest-cov
   - python setup.py develop
 script:
-  py.test -v --cov tinydb_smartcache --assert=plain
+  py.test -v --cov tinydb_smartcache
 after_success:
   coveralls
