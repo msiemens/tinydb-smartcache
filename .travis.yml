@@ -12,6 +12,6 @@ install:
   - pip install pytest-cov
   - python setup.py develop
 script:
-  py.test -v --cov tinydb
+  py.test -v --cov tinydb_smartcache
 after_success:
   coveralls
