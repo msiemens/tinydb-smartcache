@@ -32,6 +32,11 @@ If you want to enable TinyDB for all databases in a session, run:
 Changelog
 *********
 
+**v1.0.1** (2015-11-17)
+-----------------------
+
+- Fix installation via pip
+
 **v1.0.0** (2015-09-17)
 -----------------------
 
