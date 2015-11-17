@@ -32,6 +32,11 @@ If you want to enable TinyDB for all databases in a session, run:
 Changelog
 *********
 
+**v1.0.2** (2015-11-17)
+-----------------------
+
+- Account for changes in TinyDB 3.0
+
 **v1.0.1** (2015-11-17)
 -----------------------
 
