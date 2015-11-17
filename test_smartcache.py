@@ -56,14 +56,6 @@ def test_smart_query_cache(db):
     assert table.count(where('int') == 1) == 0
 
 
-def test_smart_query_cache_via_kwarg(db):
-    # For backwards compatibility
-    with pytest.raises(DeprecationWarning):
-        with catch_warning(DeprecationWarning):
-            table = db.table('table3', smart_cache=True)
-            assert isinstance(table, SmartCacheTable)
-
-
 def test_custom_table_class_via_class_attribute(db):
     TinyDB.table_class = SmartCacheTable
 

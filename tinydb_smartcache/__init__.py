@@ -13,7 +13,7 @@ class SmartCacheTable(Table):
 
     def _write(self, values):
         # Just write data, don't clear the query cache
-        self._db._write_table(values, self.name)
+        self._storage.write(values)
 
     def insert(self, element):
         # See Table.insert
