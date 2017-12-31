@@ -6,7 +6,14 @@ tinydb-smartcache
 ``tinydb-smartcache`` provides a smart query cache for TinyDB. It updates the
 query cache when inserting/removing/updating elements so the cache doesn't get
 invalidated. It's useful if you perform lots of queries while the data changes
-only little.
+only a little.
+
+Installation
+*****
+
+.. code-block:: bash
+
+    $ pip install tinydb_smartcache
 
 Usage
 *****
