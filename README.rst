@@ -39,6 +39,11 @@ If you want to enable TinyDB for all databases in a session, run:
 Changelog
 *********
 
+**v1.0.3** (2019-10-26)
+-----------------------
+
+- Make ``SmartCacheTable`` work again after breakage with TinyDB v3.12.0
+
 **v1.0.2** (2015-11-17)
 -----------------------
 
