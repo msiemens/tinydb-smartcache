@@ -22,9 +22,9 @@ class SmartCacheTable(Table):
         eid = super(SmartCacheTable, self).insert(element)
 
         # Update query cache
-        for query in self._query_cache:
+        for query in self._query_cache.lru:
             results = self._query_cache[query]
-            if query(element):
+            if query(element) and results is not None:
                 results.append(element)
 
         return eid
@@ -53,7 +53,7 @@ class SmartCacheTable(Table):
             new_value = data[eid]
 
             # Update query cache
-            for query in self._query_cache:
+            for query in self._query_cache.lru:
                 results = self._query_cache[query]
 
                 if query(old_value):
@@ -72,7 +72,7 @@ class SmartCacheTable(Table):
 
         def process(data, eid):
             # Update query cache
-            for query in self._query_cache:
+            for query in self._query_cache.lru:
 
                 results = self._query_cache[query]
                 try:

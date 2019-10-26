@@ -9,14 +9,13 @@ from tinydb_smartcache import SmartCacheTable
 
 @pytest.fixture
 def db_smartcache():
+    TinyDB.table_class = SmartCacheTable
+
     db_ = TinyDB(storage=MemoryStorage)
-    db_.purge_tables()
+    table = db_.table('_default')
 
-    db_.table_class = SmartCacheTable
-    db_ = db_.table('_default')
-
-    db_.insert_multiple({'int': 1, 'char': c} for c in 'abc')
-    return db_
+    table.insert_multiple({'int': 1, 'char': c} for c in 'abc')
+    return table
 
 
 @pytest.fixture
@@ -28,32 +27,33 @@ def db():
     return db_
 
 
-def test_smart_query_cache(db):
-    db.table_class = SmartCacheTable
-    table = db.table('table3')
+def test_smart_query_cache(db_smartcache):
+    db = db_smartcache
+    db.purge()
+
     query = where('int') == 1
     dummy = where('int') == 2
 
-    assert not table.search(query)
-    assert not table.search(dummy)
+    assert not db.search(query)
+    assert not db.search(dummy)
 
     # Test insert
-    table.insert({'int': 1})
+    db.insert({'int': 1})
 
-    assert len(table._query_cache) == 2
-    assert len(table._query_cache[query]) == 1
+    assert len(db._query_cache) == 2
+    assert len(db._query_cache[query]) == 1
 
     # Test update
-    table.update({'int': 2}, where('int') == 1)
+    db.update({'int': 2}, where('int') == 1)
 
-    assert len(table._query_cache[dummy]) == 1
-    assert table.count(query) == 0
+    assert len(db._query_cache[dummy]) == 1
+    assert db.count(query) == 0
 
     # Test remove
-    table.insert({'int': 1})
-    table.remove(where('int') == 1)
+    db.insert({'int': 1})
+    db.remove(where('int') == 1)
 
-    assert table.count(where('int') == 1) == 0
+    assert db.count(where('int') == 1) == 0
 
 
 def test_custom_table_class_via_class_attribute(db):
@@ -65,11 +65,10 @@ def test_custom_table_class_via_class_attribute(db):
     TinyDB.table_class = Table
 
 
-def test_custom_table_class_via_instance_attribute(db):
-    db.table_class = SmartCacheTable
-    table = db.table('table3')
-    assert isinstance(table, SmartCacheTable)
-
+# def test_custom_table_class_via_instance_attribute(db):
+#     db.table_class = SmartCacheTable
+#     table = db.table('table3')
+#     assert isinstance(table, SmartCacheTable)
 
 
 def test_purge(db_smartcache):
@@ -288,12 +287,6 @@ def test_contains(db_smartcache):
 
     assert db.contains(where('int') == 1)
     assert not db.contains(where('int') == 0)
-
-
-def test_contains_ids(db_smartcache):
-    db = db_smartcache
-
-    assert db.contains(doc_ids=[1, 2])
 
 
 def test_get_idempotent(db_smartcache):
