@@ -72,8 +72,9 @@ def test_custom_table_class_via_instance_attribute(db):
 
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_purge(db):
+def test_purge(db_smartcache):
+    db = db_smartcache
+
     db.purge()
 
     db.insert({})
@@ -82,8 +83,9 @@ def test_purge(db):
     assert len(db) == 0
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_all(db):
+def test_all(db_smartcache):
+    db = db_smartcache
+
     db.purge()
 
     for i in range(10):
@@ -92,8 +94,9 @@ def test_all(db):
     assert len(db.all()) == 10
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_insert(db):
+def test_insert(db_smartcache):
+    db = db_smartcache
+
     db.purge()
     db.insert({'int': 1, 'char': 'a'})
 
@@ -109,15 +112,17 @@ def test_insert(db):
     assert db.count(where('char') == 'a') == 1
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_insert_ids(db):
+def test_insert_ids(db_smartcache):
+    db = db_smartcache
+
     db.purge()
     assert db.insert({'int': 1, 'char': 'a'}) == 1
     assert db.insert({'int': 1, 'char': 'a'}) == 2
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_insert_multiple(db):
+def test_insert_multiple(db_smartcache):
+    db = db_smartcache
+
     db.purge()
     assert not db.contains(where('int') == 1)
 
@@ -154,8 +159,9 @@ def test_insert_multiple(db):
         assert db.count(where('int') == i) == 1
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_insert_multiple_with_ids(db):
+def test_insert_multiple_with_ids(db_smartcache):
+    db = db_smartcache
+
     db.purge()
 
     # Insert multiple from list
@@ -164,30 +170,34 @@ def test_insert_multiple_with_ids(db):
                                {'int': 1, 'char': 'c'}]) == [1, 2, 3]
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_remove(db):
+def test_remove(db_smartcache):
+    db = db_smartcache
+
     db.remove(where('char') == 'b')
 
     assert len(db) == 2
     assert db.count(where('int') == 1) == 2
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_remove_multiple(db):
+def test_remove_multiple(db_smartcache):
+    db = db_smartcache
+
     db.remove(where('int') == 1)
 
     assert len(db) == 0
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_remove_ids(db):
+def test_remove_ids(db_smartcache):
+    db = db_smartcache
+
     db.remove(doc_ids=[1, 2])
 
     assert len(db) == 1
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_update(db):
+def test_update(db_smartcache):
+    db = db_smartcache
+
     assert db.count(where('int') == 1) == 3
 
     db.update({'int': 2}, where('char') == 'a')
@@ -196,8 +206,9 @@ def test_update(db):
     assert db.count(where('int') == 1) == 2
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_update_transform(db):
+def test_update_transform(db_smartcache):
+    db = db_smartcache
+
     def increment(field):
         def transform(el):
             el[field] += 1
@@ -218,15 +229,17 @@ def test_update_transform(db):
     assert db.count(where('int') == 1) == 2
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_update_ids(db):
+def test_update_ids(db_smartcache):
+    db = db_smartcache
+
     db.update({'int': 2}, doc_ids=[1, 2])
 
     assert db.count(where('int') == 2) == 2
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_search(db):
+def test_search(db_smartcache):
+    db = db_smartcache
+
     assert not db._query_cache
     assert len(db.search(where('int') == 1)) == 3
 
@@ -234,50 +247,58 @@ def test_search(db):
     assert len(db.search(where('int') == 1)) == 3  # Query result from cache
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_contians(db):
+def test_contians(db_smartcache):
+    db = db_smartcache
+
     assert db.contains(where('int') == 1)
     assert not db.contains(where('int') == 0)
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_contains_ids(db):
+def test_contains_ids(db_smartcache):
+    db = db_smartcache
+
     assert db.contains(doc_ids=[1, 2])
     assert not db.contains(doc_ids=[88])
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_get(db):
+def test_get(db_smartcache):
+    db = db_smartcache
+
     item = db.get(where('char') == 'b')
     assert item['char'] == 'b'
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_get_ids(db):
+def test_get_ids(db_smartcache):
+    db = db_smartcache
+
     el = db.all()[0]
     assert db.get(doc_id=el.doc_id) == el
     assert db.get(doc_id=float('NaN')) is None
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_count(db):
+def test_count(db_smartcache):
+    db = db_smartcache
+
     assert db.count(where('int') == 1) == 3
     assert db.count(where('char') == 'd') == 0
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_contains(db):
+def test_contains(db_smartcache):
+    db = db_smartcache
+
     assert db.contains(where('int') == 1)
     assert not db.contains(where('int') == 0)
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_contains_ids(db):
+def test_contains_ids(db_smartcache):
+    db = db_smartcache
+
     assert db.contains(doc_ids=[1, 2])
 
 
-@pytest.mark.parametrize('db', [db_smartcache()])
-def test_get_idempotent(db):
+def test_get_idempotent(db_smartcache):
+    db = db_smartcache
+
     u = db.get(where('int') == 1)
     z = db.get(where('int') == 1)
     assert u == z
