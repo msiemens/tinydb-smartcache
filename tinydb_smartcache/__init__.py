@@ -1,4 +1,4 @@
-from tinydb.database import Table
+from tinydb.database import Table, _get_doc_ids
 
 
 class SmartCacheTable(Table):
@@ -36,8 +36,9 @@ class SmartCacheTable(Table):
         # `Table.insert_multiple` doesn't call `insert()` for every element
         return [self.insert(element) for element in elements]
 
-    def update(self, fields, cond=None, eids=None):
+    def update(self, fields, cond=None, doc_ids=None, eids=None):
         # See Table.update
+        doc_ids = _get_doc_ids(doc_ids, eids)
 
         if callable(fields):
             _update = lambda data, eid: fields(data[eid])
@@ -63,10 +64,11 @@ class SmartCacheTable(Table):
                     # Add new value to cache
                     results.append(new_value)
 
-        self.process_elements(process, cond, eids)
+        self.process_elements(process, cond, doc_ids)
 
-    def remove(self, cond=None, eids=None):
+    def remove(self, cond=None, doc_ids=None, eids=None):
         # See Table.remove
+        doc_ids = _get_doc_ids(doc_ids, eids)
 
         def process(data, eid):
             # Update query cache
@@ -81,7 +83,7 @@ class SmartCacheTable(Table):
             # Remove element
             data.pop(eid)
 
-        self.process_elements(process, cond, eids)
+        self.process_elements(process, cond, doc_ids)
 
     def purge(self):
         # See Table.purge

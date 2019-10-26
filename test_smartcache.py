@@ -181,7 +181,7 @@ def test_remove_multiple(db):
 
 @pytest.mark.parametrize('db', [db_smartcache()])
 def test_remove_ids(db):
-    db.remove(eids=[1, 2])
+    db.remove(doc_ids=[1, 2])
 
     assert len(db) == 1
 
@@ -220,7 +220,7 @@ def test_update_transform(db):
 
 @pytest.mark.parametrize('db', [db_smartcache()])
 def test_update_ids(db):
-    db.update({'int': 2}, eids=[1, 2])
+    db.update({'int': 2}, doc_ids=[1, 2])
 
     assert db.count(where('int') == 2) == 2
 
@@ -242,8 +242,8 @@ def test_contians(db):
 
 @pytest.mark.parametrize('db', [db_smartcache()])
 def test_contains_ids(db):
-    assert db.contains(eids=[1, 2])
-    assert not db.contains(eids=[88])
+    assert db.contains(doc_ids=[1, 2])
+    assert not db.contains(doc_ids=[88])
 
 
 @pytest.mark.parametrize('db', [db_smartcache()])
@@ -255,8 +255,8 @@ def test_get(db):
 @pytest.mark.parametrize('db', [db_smartcache()])
 def test_get_ids(db):
     el = db.all()[0]
-    assert db.get(eid=el.eid) == el
-    assert db.get(eid=float('NaN')) is None
+    assert db.get(doc_id=el.doc_id) == el
+    assert db.get(doc_id=float('NaN')) is None
 
 
 @pytest.mark.parametrize('db', [db_smartcache()])
@@ -273,7 +273,7 @@ def test_contains(db):
 
 @pytest.mark.parametrize('db', [db_smartcache()])
 def test_contains_ids(db):
-    assert db.contains(eids=[1, 2])
+    assert db.contains(doc_ids=[1, 2])
 
 
 @pytest.mark.parametrize('db', [db_smartcache()])
