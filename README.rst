@@ -9,7 +9,7 @@ invalidated. It's useful if you perform lots of queries while the data changes
 only a little.
 
 Installation
-*****
+************
 
 .. code-block:: bash
 
