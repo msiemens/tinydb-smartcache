@@ -1,7 +1,6 @@
 from tinydb import TinyDB, where
 from tinydb.database import Table
 from tinydb.storages import MemoryStorage
-from tinydb.utils import catch_warning
 import pytest
 
 from tinydb_smartcache import SmartCacheTable
@@ -21,7 +20,7 @@ def db_smartcache():
 @pytest.fixture
 def db():
     db_ = TinyDB(storage=MemoryStorage)
-    db_.purge_tables()
+    db_.drop_tables()
 
     db_.insert_multiple({'int': 1, 'char': c} for c in 'abc')
     return db_
@@ -29,23 +28,34 @@ def db():
 
 def test_smart_query_cache(db_smartcache):
     db = db_smartcache
-    db.purge()
 
     query = where('int') == 1
     dummy = where('int') == 2
 
+    assert len(db.search(query)) == 3
+    assert len(db.search(dummy)) == 0
+    
+    assert len(db._query_cache[query]) == 3
+    assert len(db._query_cache[dummy]) == 0
+    
+    db.truncate()
+    
     assert not db.search(query)
     assert not db.search(dummy)
+    assert len(db._query_cache[query]) == 0
+    assert len(db._query_cache[dummy]) == 0
 
     # Test insert
     db.insert({'int': 1})
 
     assert len(db._query_cache) == 2
     assert len(db._query_cache[query]) == 1
+    assert len(db._query_cache[dummy]) == 0
 
     # Test update
     db.update({'int': 2}, where('int') == 1)
 
+    assert len(db._query_cache[query]) == 0
     assert len(db._query_cache[dummy]) == 1
     assert db.count(query) == 0
 
@@ -71,13 +81,13 @@ def test_custom_table_class_via_class_attribute(db):
 #     assert isinstance(table, SmartCacheTable)
 
 
-def test_purge(db_smartcache):
+def test_truncate(db_smartcache):
     db = db_smartcache
 
-    db.purge()
+    db.truncate()
 
     db.insert({})
-    db.purge()
+    db.truncate()
 
     assert len(db) == 0
 
@@ -85,7 +95,7 @@ def test_purge(db_smartcache):
 def test_all(db_smartcache):
     db = db_smartcache
 
-    db.purge()
+    db.truncate()
 
     for i in range(10):
         db.insert({})
@@ -96,12 +106,12 @@ def test_all(db_smartcache):
 def test_insert(db_smartcache):
     db = db_smartcache
 
-    db.purge()
+    db.truncate()
     db.insert({'int': 1, 'char': 'a'})
 
     assert db.count(where('int') == 1) == 1
 
-    db.purge()
+    db.truncate()
 
     db.insert({'int': 1, 'char': 'a'})
     db.insert({'int': 1, 'char': 'b'})
@@ -114,7 +124,7 @@ def test_insert(db_smartcache):
 def test_insert_ids(db_smartcache):
     db = db_smartcache
 
-    db.purge()
+    db.truncate()
     assert db.insert({'int': 1, 'char': 'a'}) == 1
     assert db.insert({'int': 1, 'char': 'a'}) == 2
 
@@ -122,7 +132,7 @@ def test_insert_ids(db_smartcache):
 def test_insert_multiple(db_smartcache):
     db = db_smartcache
 
-    db.purge()
+    db.truncate()
     assert not db.contains(where('int') == 1)
 
     # Insert multiple from list
@@ -138,7 +148,7 @@ def test_insert_multiple(db_smartcache):
         for j in range(10):
             yield {'int': j}
 
-    db.purge()
+    db.truncate()
 
     db.insert_multiple(generator())
 
@@ -150,7 +160,7 @@ def test_insert_multiple(db_smartcache):
         assert db.count(where('int')) == 10
 
     # Insert multiple from inline generator
-    db.purge()
+    db.truncate()
 
     db.insert_multiple({'int': i} for i in range(10))
 
@@ -161,7 +171,7 @@ def test_insert_multiple(db_smartcache):
 def test_insert_multiple_with_ids(db_smartcache):
     db = db_smartcache
 
-    db.purge()
+    db.truncate()
 
     # Insert multiple from list
     assert db.insert_multiple([{'int': 1, 'char': 'a'},
@@ -253,11 +263,10 @@ def test_contians(db_smartcache):
     assert not db.contains(where('int') == 0)
 
 
-def test_contains_ids(db_smartcache):
+def test_contains_id(db_smartcache):
     db = db_smartcache
 
-    assert db.contains(doc_ids=[1, 2])
-    assert not db.contains(doc_ids=[88])
+    assert not db.contains(doc_id=88)
 
 
 def test_get(db_smartcache):
