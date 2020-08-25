@@ -59,8 +59,8 @@ Changelog
 
 - Initial release on PyPI
 
-.. |Build Status| image:: http://img.shields.io/travis/msiemens/tinydb-smartcache.svg?style=flat-square
-   :target: https://travis-ci.org/msiemens/tinydb-smartcache
+.. |Build Status| image:: https://img.shields.io/github/workflow/status/msiemens/tinydb-smartcache/Python%20CI?style=flat-square
+   :target: https://github.com/msiemens/tinydb-smartcache/actions?query=workflow%3A%22Python+CI%22
 .. |Coverage| image:: http://img.shields.io/coveralls/msiemens/tinydb-smartcache.svg?style=flat-square
    :target: https://coveralls.io/r/msiemens/tinydb-smartcache
 .. |Version| image:: http://img.shields.io/pypi/v/tinydb-smartcache.svg?style=flat-square
