@@ -34,12 +34,12 @@ def test_smart_query_cache(db_smartcache):
 
     assert len(db.search(query)) == 3
     assert len(db.search(dummy)) == 0
-    
+
     assert len(db._query_cache[query]) == 3
     assert len(db._query_cache[dummy]) == 0
-    
+
     db.truncate()
-    
+
     assert not db.search(query)
     assert not db.search(dummy)
     assert len(db._query_cache[query]) == 0
@@ -221,11 +221,13 @@ def test_update_transform(db_smartcache):
     def increment(field):
         def transform(el):
             el[field] += 1
+
         return transform
 
     def delete(field):
         def transform(el):
             del el[field]
+
         return transform
 
     assert db.count(where('int') == 1) == 3
