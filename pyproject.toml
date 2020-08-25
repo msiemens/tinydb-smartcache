@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tinydb-smartcache"
-version = "1.0.3"
+version = "2.0.0"
 description = "A smarter query cache for TinyDB"
 authors = ["Markus Siemens <markus@m-siemens.de>"]
 license = "MIT"

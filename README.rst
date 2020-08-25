@@ -39,6 +39,11 @@ If you want to enable TinyDB for all databases in a session, run:
 Changelog
 *********
 
+**v2.0.0** (2020-08-25)
+-----------------------
+
+- Add support for TinyDB v4. Drops support for TinyDB <= 3 and Python 2.
+
 **v1.0.3** (2019-10-26)
 -----------------------
 
