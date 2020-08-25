@@ -34,9 +34,9 @@ python = "^3.5"
 tinydb = "^4.0"
 
 [tool.poetry.dev-dependencies]
+pytest = "^5.4.2"
 coverage = "^5.1"
 coveralls = "^2.0.0"
-pytest = "^5.4.2"
 pytest-cov = "^2.9.0"
 
 [build-system]
