@@ -27,7 +27,7 @@ jobs:
         poetry install
     - name: Run test suite
       run: |
-        poetry run py.test -v --cov=tinydb_serialization
+        poetry run py.test -v --cov=tinydb_smartcache
     - name: Verify dist package format
       run: |
         poetry build
