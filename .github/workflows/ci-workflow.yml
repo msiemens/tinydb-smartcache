@@ -30,7 +30,7 @@ jobs:
         poetry run py.test -v --cov=tinydb_serialization
     - name: Verify dist package format
       run: |
-        poetry run build
+        poetry build
         twine check dist/*
     - name: Upload coverage result
       env:
